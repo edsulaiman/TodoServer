@@ -1,7 +1,7 @@
+using System.Reflection;
+using FluentValidation;
 using IdGen;
 using TodoServer.Dtos;
-using FluentValidation;
-using System.Reflection;
 
 var todos = new List<OutTodoDto>();
 
@@ -83,16 +83,13 @@ app.MapPut("/", async (IValidator<InTodoUpdateDto> validator, InTodoUpdateDto dt
         });
     }
 
-    todos[todoIndex] = new OutTodoDto
-    {
-        ParentId = dto.ParentId,
-        TaskName = dto.TaskName,
-        IsDone = dto.IsDone,
-        StartDate = dto.StartDate,
-        DueDate = dto.DueDate,
-        Starred = dto.Starred,
-        UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-    };
+    todos[todoIndex].ParentId = dto.ParentId;
+    todos[todoIndex].TaskName = dto.TaskName;
+    todos[todoIndex].IsDone = dto.IsDone;
+    todos[todoIndex].StartDate = dto.StartDate;
+    todos[todoIndex].DueDate = dto.DueDate;
+    todos[todoIndex].Starred = dto.Starred;
+    todos[todoIndex].UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
     return Results.Ok(new
     {
