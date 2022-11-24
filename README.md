@@ -6,10 +6,12 @@ PT. Lingkar Kreasi Flutter Developer Test Server
 
 - Create simple Todo app using Flutter 3+
 - App must have at least 2 screen (list, and detail)
-- App can add new todo
-- App can update existing todo
-- App can update todo is done status on list screen
-- App can show todo using tree view
+- App can add new task
+- App can add new subtask
+- App can update existing task
+- App can delete task
+- App can update task is done status on list screen
+- App can show task and its subtasks using tree view
 
 ## Instalation
 
