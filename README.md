@@ -15,10 +15,10 @@ PT. Lingkar Kreasi Flutter Developer Test Server
 
 ## Instalation
 
-- Download [.NET 6+ SDK](https://dotnet.microsoft.com/en-us/download)
+- Download [.NET 7+ SDK](https://dotnet.microsoft.com/en-us/download)
 - Clone this repository
 - Build the app using `dotnet publish -c Release`
-- Run app by opening publish folder `bin/Release/net6.0/`
+- Run app by opening publish folder `bin/Release/net7.0/`
 
 ## Changing url
 
@@ -115,5 +115,15 @@ Response sample
     "createdAt": null,
     "updatedAt": 1669056508532
   }
+}
+```
+
+### DELETE /{id}
+
+Response sample
+
+```json
+{
+  "message": "Success"
 }
 ```

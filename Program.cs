@@ -5,6 +5,16 @@ using TodoServer.Dtos;
 
 var todos = new List<OutTodoDto>();
 
+void _deleteSubTaskRecursive(long id)
+{
+    var deletedTodos = todos!.Where(e => e.ParentId == id).ToList();
+    foreach (var todo in deletedTodos)
+    {
+        todos!.Remove(todo);
+        _deleteSubTaskRecursive(todo.Id.GetValueOrDefault());
+    }
+}
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped((sp) => new IdGenerator(0, new IdGeneratorOptions { SequenceOverflowStrategy = SequenceOverflowStrategy.SpinWait }));
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(Program)));
@@ -27,7 +37,7 @@ app.MapPost("/", async (IdGenerator idGen, IValidator<InTodoAddDto> validator, I
         return Results.ValidationProblem(validationError.ToDictionary());
     }
 
-    var isParentIdExist = todos.FirstOrDefault(e => e.ParentId == dto.ParentId) != null;
+    var isParentIdExist = todos.FirstOrDefault(e => e.Id == dto.ParentId) != null;
     if (dto.ParentId != null && !isParentIdExist)
     {
         return Results.NotFound(new
@@ -74,7 +84,7 @@ app.MapPut("/", async (IValidator<InTodoUpdateDto> validator, InTodoUpdateDto dt
         });
     }
 
-    var isParentIdExist = todos.FirstOrDefault(e => e.ParentId == dto.ParentId) != null;
+    var isParentIdExist = todos.FirstOrDefault(e => e.Id == dto.ParentId) != null;
     if (dto.ParentId != null && !isParentIdExist)
     {
         return Results.NotFound(new
@@ -96,6 +106,23 @@ app.MapPut("/", async (IValidator<InTodoUpdateDto> validator, InTodoUpdateDto dt
         Message = "Success",
         Data = todos[todoIndex]
     });
+});
+
+app.MapDelete("/{id}", (long id) =>
+{
+    var todo = todos.FirstOrDefault(e => e.Id == id);
+    if (todo == null)
+    {
+        return Results.NotFound(new
+        {
+            Message = "Todo not found"
+        });
+    }
+
+    todos.Remove(todo);
+    _deleteSubTaskRecursive(todo.Id.GetValueOrDefault());
+
+    return Results.Ok(new { Message = "Success" });
 });
 
 app.Run();
